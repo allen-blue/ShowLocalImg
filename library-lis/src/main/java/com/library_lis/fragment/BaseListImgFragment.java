@@ -17,6 +17,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.library_lis.AlbumHelper;
 import com.library_lis.LocalImageLoader;
@@ -35,6 +36,7 @@ public abstract class BaseListImgFragment extends Fragment {
     private ArrayList<ImageItem> dataList = new ArrayList<>();//本地图片的数据源
     private ArrayList<String> selectImgs = new ArrayList<>();//先前选中的图片
     private ImageBucket selectedBucket;//先去选择的文件夹
+    private ArrayList<ImageBucket> mBucketLists; //所有图片文件夹
 
     private AlbumHelper helper;
     private int itemWidth;//图片宽度
@@ -178,9 +180,15 @@ public abstract class BaseListImgFragment extends Fragment {
     private void setUpView() {
         helper = AlbumHelper.getHelper();
         helper.init(getActivity());
+        mBucketLists = helper.getImageBucketList();
+        if (mBucketLists == null || mBucketLists.size() == 0) {
+            Toast.makeText(getActivity(), "该终端不存在图片资源", Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+            return;
+        }
         initPop();
         dataList.clear();
-        dataList.addAll(helper.getAllImageList(true));
+        dataList.addAll(mBucketLists.get(0).imageList);
         adapter = new ImageGridAdapter(getActivity(), dataList, itemWidth);
         adapter.setMaxSelect(maxSize);
         gridView.setAdapter(adapter);
@@ -204,7 +212,11 @@ public abstract class BaseListImgFragment extends Fragment {
     }
 
     public void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
+        if (maxSize <= 1) {
+            this.maxSize = 1;
+        } else {
+            this.maxSize = maxSize;
+        }
     }
 
     public void setIsPreView(boolean flag) {
@@ -258,14 +270,13 @@ public abstract class BaseListImgFragment extends Fragment {
     }
 
     private void initPop() {
-        final ArrayList<ImageBucket> bucketLists = helper.getImageBucketList(false);
-        selectedBucket = bucketLists.get(0);
-        final ImageBucketAdapter bucketAdapter = new ImageBucketAdapter(getActivity(), bucketLists);
+        selectedBucket = mBucketLists.get(0);
+        final ImageBucketAdapter bucketAdapter = new ImageBucketAdapter(getActivity(), mBucketLists);
         popListview.setAdapter(bucketAdapter);
         popListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final ImageBucket curBucket = bucketLists.get(position);
+                final ImageBucket curBucket = mBucketLists.get(position);
                 if (curBucket != selectedBucket) {
                     ImageView selectBucketFlagIv = (ImageView) view
                             .findViewById(R.id.img_bucket_item_choose_flag);

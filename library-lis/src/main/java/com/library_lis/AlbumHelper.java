@@ -20,7 +20,6 @@ public class AlbumHelper {
     private Context context;
     private ContentResolver cr;
     private static AlbumHelper instance;
-    private boolean hasBuildBucketList = false;
     HashMap<String, ImageBucket> bucketMap = new HashMap<String, ImageBucket>();
     private ArrayList<ImageItem> imageList = new ArrayList<ImageItem>();
 
@@ -68,14 +67,14 @@ public class AlbumHelper {
                 i.imageId = id;
                 i.imagePath = path;
                 imageList.add(i);
-                ImageBucket bucket = null;
+                ImageBucket bucket;
                 if (this.bucketMap.containsKey(bucketId))
                     bucket = this.bucketMap.get(bucketId);
                 else {
                     bucket = new ImageBucket();
                     bucketMap.put(bucketId, bucket);
                     bucket.bucketName = bucketname;
-                    bucket.imageList = new ArrayList<ImageItem>();
+                    bucket.imageList = new ArrayList<>();
                 }
                 bucket.count++;
                 bucket.imageList.add(i);
@@ -87,14 +86,11 @@ public class AlbumHelper {
     /**
      * 获取图片的文件夹列表
      *
-     * @param refresh
      * @return
      */
-    public ArrayList<ImageBucket> getImageBucketList(boolean refresh) {
-        if (refresh || (!refresh && !hasBuildBucketList)) {
-            clear();
+    public ArrayList<ImageBucket> getImageBucketList() {
+        if (bucketMap == null || bucketMap.size() == 0)
             buildImagesBucketList();
-        }
         //声明所有文件夹列表集合
         ArrayList<ImageBucket> bucketList = new ArrayList<ImageBucket>();
         ImageBucket allBucket = new ImageBucket();
@@ -112,19 +108,4 @@ public class AlbumHelper {
         return bucketList;
 
     }
-
-    public ArrayList<ImageItem> getAllImageList(boolean refresh) {
-        if (refresh || (!refresh && !hasBuildBucketList)) {
-            clear();
-            buildImagesBucketList();
-        }
-        return imageList;
-    }
-
-
-    public void clear() {
-        bucketMap.clear();
-        imageList.clear();
-    }
-
 }
