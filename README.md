@@ -1,8 +1,5 @@
-# ShowLocalImg
-超高仿微信图片选择
 
-
-# Library-lis
+# Library-lis(仿微信本地图片选择)
 
 标签（空格分隔）：api
 
@@ -52,6 +49,7 @@ public abstract void onBucketSelect(String bucketName);
     public void hidePop()
 ```
 
+[DemoActivity]
 
 
  
