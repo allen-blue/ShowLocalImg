@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="#ee293334"
+    android:clickable="true"
+    android:orientation="horizontal"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <Button
+        android:id="@+id/fragment_default_bucket_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@null"
+        android:textColor="@drawable/select_bucket"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/fragment_default_bucket_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="-5dp"
+        android:paddingRight="-5dp"
+        android:src="@drawable/ic_bottom_mark_normal" />
+</LinearLayout>
